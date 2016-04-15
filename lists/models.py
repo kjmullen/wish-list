@@ -35,6 +35,11 @@ class ListItem(models.Model):
     price = models.IntegerField()
 
     @property
+    def fully_pledged(self):
+        total = self.pledges.aggregate(Sum('amount'))
+        return self.price > total['amount__sum']
+
+    @property
     def percent_to_complete(self):
         total = self.pledges.aggregate(Sum('amount'))
         return total['amount__sum'] / self.price
