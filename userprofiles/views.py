@@ -4,6 +4,7 @@ from lists.permissions import IsOwnerOrReadOnly
 from lists.serializers import PledgeSerializer
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from userprofiles.models import UserProfile
+from userprofiles.permissions import IsAuthenticatedOrWriteOnly
 from userprofiles.serializers import UserSerializer, UserProfileSerializer
 from rest_framework import generics
 from django.contrib.auth.models import User
