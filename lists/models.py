@@ -22,7 +22,6 @@ class List(models.Model):
         return timezone.now().date() > self.expiration_date
 
 
-
 class ListItem(models.Model):
     name = models.CharField(max_length=150)
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
@@ -35,15 +34,13 @@ class ListItem(models.Model):
     amazon_link = models.URLField()
     price = models.IntegerField()
 
-    # @property
-    # def percent_to_complete(self):
-    #     total = []
-    #     for pledge in self.pledges.all():
-    #         total.append(pledge.amount_value)
-    #     return sum(total) / float(self.price)
+    @property
+    def percent_to_complete(self):
+        total = self.pledges.aggregate(Sum('amount'))
+        return total['amount__sum'] / self.price
 
     def __str__(self):
-        return "{} on {} for {}".format(self.name, self.list, self.user)
+        return "{} item on {} for {}".format(self.name, self.list, self.user)
 
 
 class Pledge(models.Model):
