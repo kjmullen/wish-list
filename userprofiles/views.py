@@ -1,11 +1,13 @@
+import stripe
 from django.shortcuts import render
 from lists.models import Pledge
 from lists.permissions import IsOwnerOrReadOnly
 from lists.serializers import PledgeSerializer
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from userprofiles.models import UserProfile
+from userprofiles.models import UserProfile, ShippingAddress
 from userprofiles.permissions import IsAuthenticatedOrWriteOnly
-from userprofiles.serializers import UserSerializer, UserProfileSerializer
+from userprofiles.serializers import UserSerializer, UserProfileSerializer, \
+    PledgeChargeSerializer, ChargeSerializer, ShippingAddressSerializer
 from rest_framework import generics
 from django.contrib.auth.models import User
 
@@ -41,12 +43,46 @@ class DetailUpdateDeletePledge(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsOwnerOrReadOnly,)
 
 
-class ListCreatePledge(generics.ListCreateAPIView):
+class ListPledge(generics.ListAPIView):
 
     queryset = Pledge.objects.all()
     serializer_class = PledgeSerializer
-    permission_classes = (IsAuthenticatedOrReadOnly,)
+
+
+class CreatePledge(generics.CreateAPIView):
+
+    queryset = Pledge.objects.all()
+    serializer_class = PledgeChargeSerializer
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        profile = self.request.user.profile
 
+        serializer.save(profile=profile)
+        serializer.save()
+
+
+class CreateCharge(generics.CreateAPIView):
+
+    serializer_class = ChargeSerializer
+
+
+class ListCreateShippingAddress(generics.ListCreateAPIView):
+
+    serializer_class = ShippingAddressSerializer
+    queryset = ShippingAddress.objects.all()
+    permission_classes = (IsOwnerOrReadOnly,)
+
+    def perform_create(self, serializer):
+        profile = self.request.user.profile
+        serializer.save(profile=profile)
+        serializer.save()
+
+    # TODO:
+    # make new Permission IsOwner
+    # change permission to only IsOwner
+
+
+class DetailUpdateDeleteShippingAddress(generics.RetrieveUpdateDestroyAPIView):
+    serializer_class = ShippingAddressSerializer
+    queryset = ShippingAddress.objects.all()
+    permission_classes = (IsOwnerOrReadOnly,)

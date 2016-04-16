@@ -53,7 +53,7 @@ class Pledge(models.Model):
     profile = models.ForeignKey(UserProfile, related_name="pledges")
     item = models.ForeignKey(ListItem, related_name="pledges")
     amount = models.IntegerField()
-    stripe_token = models.CharField(max_length=40, null=True, blank=True)
+    charge_id = models.CharField(max_length=40, null=True, blank=True)
 
     @property
     def amount_value(self):

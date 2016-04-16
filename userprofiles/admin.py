@@ -9,5 +9,5 @@ class UserProfileAdmin(admin.ModelAdmin):
 
 @admin.register(ShippingAddress)
 class ShippingAddressAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name', 'street_1', 'street_2', 'city', 'state',
-                    'zip_code')
+    list_display = ('id', 'name', 'full_name', 'street_1', 'street_2', 'city',
+                    'state', 'zip_code')

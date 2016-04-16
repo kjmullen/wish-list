@@ -21,6 +21,7 @@ class UserProfile(models.Model):
 
 class ShippingAddress(models.Model):
 
+    full_name = models.CharField(max_length=100, null=True, blank=True)
     name = models.CharField(max_length=80,
                             help_text="An easy to remember name like HOME")
     street_1 = models.CharField(max_length=100)
