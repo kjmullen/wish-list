@@ -1,9 +1,7 @@
-
 from django.contrib.auth.models import User
 from django.db import models
 from django.db.models import Sum
 from django.utils import timezone
-from userprofiles.models import UserProfile
 
 
 class List(models.Model):
@@ -46,18 +44,3 @@ class ListItem(models.Model):
 
     def __str__(self):
         return "{} item on {} for {}".format(self.name, self.list, self.user)
-
-
-class Pledge(models.Model):
-    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
-    profile = models.ForeignKey(UserProfile, related_name="pledges")
-    item = models.ForeignKey(ListItem, related_name="pledges")
-    amount = models.IntegerField()
-    charge_id = models.CharField(max_length=40, null=True, blank=True)
-
-    @property
-    def amount_value(self):
-        return self.amount
-
-    def __str__(self):
-        return "{} for {} by {}".format(self.amount, self.item, self.profile)

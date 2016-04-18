@@ -1,7 +1,7 @@
 from django.conf.urls import url
 from userprofiles.views import ListUserProfile, ListCreateUser, DetailUser, \
     DetailUserProfile, ListPledge, \
-    ListCreateShippingAddress, DetailUpdateDeleteShippingAddress
+    ListCreateShippingAddress, DetailUpdateDeleteShippingAddress, CreateCharge
 
 urlpatterns = [
     url(r'^profiles/$', ListUserProfile.as_view(), name="list_user_profile"),
@@ -14,8 +14,7 @@ urlpatterns = [
     url(r'^profiles/addresses/(?P<pk>\d+)/$',
         DetailUpdateDeleteShippingAddress.as_view(),
         name="detail_update_delete_shipping_address"),
-    # url(r'^pledges/$', ListPledge.as_view(), name="list_pledge"),
-    # url(r'^pledges/create/$', CreatePledge.as_view(), name="create_pledge"),
-    # url(r'^charges/create/$', CreateCharge.as_view(), name="create_charge"),
+    url(r'^pledges/$', ListPledge.as_view(), name="list_pledge"),
+    url(r'^charges/create/$', CreateCharge.as_view(), name="create_charge"),
 
 ]

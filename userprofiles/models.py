@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.conf import settings
+from lists.models import ListItem
 from rest_framework.authtoken.models import Token
 
 
@@ -37,8 +38,26 @@ class ShippingAddress(models.Model):
         return "{} address for {}".format(self.name, self.profile)
 
 
+class Pledge(models.Model):
+    created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+    profile = models.ForeignKey(UserProfile, related_name="pledges")
+    item = models.ForeignKey(ListItem, related_name="pledges")
+    amount = models.IntegerField()
+    charge_id = models.CharField(max_length=60)
+
+
+    @property
+    def amount_value(self):
+        return self.amount
+
+    def __str__(self):
+        return "{} for {} by {}".format(self.amount, self.item, self.profile)
+
+
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_auth_token(sender, instance=None, created=False, **kwargs):
     if created:
         Token.objects.create(user=instance)
         UserProfile.objects.create(user=instance)
+
+

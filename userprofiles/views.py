@@ -1,14 +1,15 @@
 import stripe
 from django.shortcuts import render
-from lists.models import Pledge
 from lists.permissions import IsOwnerOrReadOnly
-from lists.serializers import PledgeSerializer
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from userprofiles.models import UserProfile, ShippingAddress
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from userprofiles.models import UserProfile, ShippingAddress, Pledge
 from userprofiles.permissions import IsAuthenticatedOrWriteOnly
-from userprofiles.serializers import UserSerializer, UserProfileSerializer,\
-    ShippingAddressSerializer
-from rest_framework import generics
+from userprofiles.serializers import UserProfileSerializer,\
+    ShippingAddressSerializer, ChargeSerializer, PledgeSerializer, \
+    UserSerializer
+from rest_framework import generics, status
 from django.contrib.auth.models import User
 
 
@@ -48,26 +49,18 @@ class ListPledge(generics.ListAPIView):
     queryset = Pledge.objects.all()
     serializer_class = PledgeSerializer
 
-#
-# class CreatePledge(generics.CreateAPIView):
-#
-#     queryset = Pledge.objects.all()
-#     serializer_class = PledgeChargeSerializer
-#
-#     def perform_create(self, serializer):
-#         profile = self.request.user.profile
-#
-#         serializer.save(profile=profile)
-#         serializer.save()
-#
-#
-# class CreateCharge(generics.CreateAPIView):
-#
-#     serializer_class = ChargeSerializer
-#
-#     def perform_create(self, serializer):
-#
-#         serializer.save()
+
+class CreateCharge(APIView):
+
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+
+    def post(self, request):
+        serializer = ChargeSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save(user=request.user)
+            return Response(None, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors,
+                            status=status.HTTP_400_BAD_REQUEST)
 
 
 class ListCreateShippingAddress(generics.ListCreateAPIView):
