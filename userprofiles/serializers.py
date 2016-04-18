@@ -42,6 +42,12 @@ class ShippingAddressSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class PledgeSerializer(serializers.ModelSerializer):
+
+    profile = UserProfileSerializer(read_only=True)
+    pass
+
+
 # class ChargeSerializer(serializers.Serializer):
 #
 #     stripe_token = serializers.CharField(max_length=40)

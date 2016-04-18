@@ -1,6 +1,6 @@
 from django.conf.urls import url
 from lists.views import DetailUpdateDeleteList, ListCreateListItem, \
-    ListCreateList, DetailUpdateDeleteListItem
+    ListCreateList, DetailUpdateDeleteListItem, ListByUser
 
 urlpatterns = [
     url(r'^$', ListCreateList.as_view(), name="list_list"),
@@ -8,4 +8,5 @@ urlpatterns = [
     url(r'^items/$', ListCreateListItem.as_view(), name="list_list_item"),
     url(r'^items/(?P<pk>\d+)$', DetailUpdateDeleteListItem.as_view(),
         name="detail_list_item"),
+    url(r'^userlists/$', ListByUser.as_view(), name="user_lists")
 ]
