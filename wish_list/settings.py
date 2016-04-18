@@ -140,8 +140,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 
 CORS_ORIGIN_ALLOW_ALL = True
-CORS_ALLOW_CREDENTIALS = False
-
 
 REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',

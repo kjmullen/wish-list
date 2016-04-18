@@ -42,41 +42,40 @@ class ShippingAddressSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class ChargeSerializer(serializers.Serializer):
-
-    stripe_token = serializers.CharField(max_length=40)
-    amount = serializers.IntegerField()
-
-    def create(self, validated_data):
-
-        stripe.api_key = os.environ('STRIPE_SECRET_KEY')
-
-        try:
-            charge = stripe.Charge.create(
-                amount=self.amount,
-                currency='usd',
-                source=validated_data['token'],
-                description="Pledge on a wish list item."
-            )
-            charge_dict = {"charge_id": charge['id'], "amount": charge['amount']}
-            return charge_dict
-
-        except stripe.error.CardError:
-            pass
-
-
-    def update(self, instance, validated_data):
-        pass
-
-
-class PledgeChargeSerializer(serializers.ModelSerializer):
-    charge_id = ChargeSerializer()
-    profile = UserProfileSerializer()
-
-    def create(self, validated_data):
-        return stripe.Charge(**validated_data)
-
-    def update(self, instance, validated_data):
-        instance.item_id = validated_data.get('item_id', instance.item_id)
-        return instance
-
+# class ChargeSerializer(serializers.Serializer):
+#
+#     stripe_token = serializers.CharField(max_length=40)
+#     amount = serializers.IntegerField()
+#
+#     def create(self, validated_data):
+#
+#         stripe.api_key = os.environ('STRIPE_SECRET_KEY')
+#
+#         try:
+#             charge = stripe.Charge.create(
+#                 amount=self.amount,
+#                 currency='usd',
+#                 source=validated_data['token'],
+#                 description="Pledge on a wish list item."
+#             )
+#             charge_dict = {"charge_id": charge['id'], "amount": charge['amount']}
+#             return charge_dict
+#
+#         except stripe.error.CardError:
+#             pass
+#
+#
+#     def update(self, instance, validated_data):
+#         pass
+#
+#
+# class PledgeChargeSerializer(serializers.ModelSerializer):
+#     charge_id = ChargeSerializer()
+#
+#     def create(self, validated_data):
+#         return stripe.Charge(**validated_data)
+#
+#     def update(self, instance, validated_data):
+#         instance.item_id = validated_data.get('item_id', instance.item_id)
+#         return instance
+#

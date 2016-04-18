@@ -13,7 +13,6 @@ class UserProfile(models.Model):
     # if user is just pledging they might not want an address
     # user has list
     # user has listitems
-    # profile has pledges
 
     def __str__(self):
         return self.user.username
