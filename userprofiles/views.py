@@ -65,6 +65,10 @@ class CreateCharge(generics.CreateAPIView):
 
     serializer_class = ChargeSerializer
 
+    def perform_create(self, serializer):
+
+        serializer.save()
+
 
 class ListCreateShippingAddress(generics.ListCreateAPIView):
 

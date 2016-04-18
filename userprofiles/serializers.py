@@ -58,31 +58,19 @@ class ChargeSerializer(serializers.Serializer):
                 source=validated_data['token'],
                 description="Pledge on a wish list item."
             )
-            charge_id=charge['id']
-            return charge_id
+            charge_dict = {"charge_id": charge['id'], "amount": charge['amount']}
+            return charge_dict
 
         except stripe.error.CardError:
             pass
 
-        # try:
-        #     charge = stripe.Charge.create(
-        #                 amount=amount,
-        #                 currency='usd',
-        #                 source=validated_data,
-        #                 description="Pledge on a wish list item."
-        #             )
-        #     charge_id = charge['id']
-        #             # Pledge.objects.create(stripe_token=charge.stripe_id)
-        #     except stripe.error.CardError as e:
-        #         pass
 
     def update(self, instance, validated_data):
         pass
 
 
-class PledgeChargeSerializer(serializers.Serializer):
+class PledgeChargeSerializer(serializers.ModelSerializer):
     charge_id = ChargeSerializer()
-    item_id = serializers.IntegerField()
     profile = UserProfileSerializer()
 
     def create(self, validated_data):
@@ -91,3 +79,4 @@ class PledgeChargeSerializer(serializers.Serializer):
     def update(self, instance, validated_data):
         instance.item_id = validated_data.get('item_id', instance.item_id)
         return instance
+
