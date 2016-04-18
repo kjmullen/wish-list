@@ -2,7 +2,7 @@ import os
 
 import stripe
 from django.conf import settings
-from lists.serializers import ListItemSerializer
+from lists.models import ListItem, List
 from rest_framework import serializers
 from userprofiles.models import UserProfile, ShippingAddress, Pledge
 from django.contrib.auth.models import User
@@ -39,6 +39,16 @@ class ShippingAddressSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ShippingAddress
+        fields = '__all__'
+
+
+class ListItemSerializer(serializers.ModelSerializer):
+
+    user = UserSerializer(read_only=True)
+    pledges = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+
+    class Meta:
+        model = ListItem
         fields = '__all__'
 
 
@@ -81,3 +91,19 @@ class ChargeSerializer(serializers.Serializer):
             return pledge
         except stripe.error.CardError as e:
             pass
+
+    def update(self, instance, validated_data):
+        pass
+
+
+class ListSerializer(serializers.ModelSerializer):
+
+    items = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    # items = ListItemSerializer(read_only=True)
+    user = UserSerializer(read_only=True)
+
+    class Meta:
+        model = List
+        # fields = '__all__'
+        fields = ('id', 'user', 'name', 'expiration_date', 'items',
+                  'created_at', 'modified_at', 'expired')
