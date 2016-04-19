@@ -42,25 +42,26 @@ class ShippingAddressSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class ListItemSerializer(serializers.ModelSerializer):
-
-    user = UserSerializer(read_only=True)
-    # list = serializers.PrimaryKeyRelatedField(read_only=True)
-    pledges = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
-
-    class Meta:
-        model = ListItem
-        fields = '__all__'
-
-
 class PledgeSerializer(serializers.ModelSerializer):
 
     # profile = UserProfileSerializer(read_only=True)
-    item = ListItemSerializer(read_only=True)
+    item = serializers.PrimaryKeyRelatedField(read_only=True)
+    # item = ListItemSerializer(read_only=True)
 
     class Meta:
         model = Pledge
         fields = ('profile', 'item',  'amount', 'created_at')
+
+
+class ListItemSerializer(serializers.ModelSerializer):
+    user = UserSerializer(read_only=True)
+    # list = serializers.PrimaryKeyRelatedField(read_only=True)
+    # pledges = serializers.PrimaryKeyRelatedField(many=True, read_only=True)
+    pledges = PledgeSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = ListItem
+        fields = '__all__'
 
 
 class ChargeSerializer(serializers.Serializer):
