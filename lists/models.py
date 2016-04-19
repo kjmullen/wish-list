@@ -28,7 +28,7 @@ class ListItem(models.Model):
                               blank=True,
                               default='item_picture/default.jpg')
     list = models.ForeignKey(List, related_name="items")
-    user = models.ForeignKey(User, related_name="items")
+    user = models.ForeignKey(User, related_name="items", null=True)
     amazon_link = models.URLField()
     price = models.IntegerField()
 

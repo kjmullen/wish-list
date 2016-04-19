@@ -47,6 +47,7 @@ class PledgeSerializer(serializers.ModelSerializer):
     # profile = UserProfileSerializer(read_only=True)
     item = serializers.PrimaryKeyRelatedField(read_only=True)
     # item = ListItemSerializer(read_only=True)
+    profile = UserProfileSerializer(read_only=True)
 
     class Meta:
         model = Pledge
