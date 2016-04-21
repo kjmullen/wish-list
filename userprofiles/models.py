@@ -14,6 +14,7 @@ class UserProfile(models.Model):
     # if user is just pledging they might not want an address
     # user has list
     # user has listitems
+    # profile has pledges
 
     def __str__(self):
         return self.user.username
@@ -44,6 +45,7 @@ class Pledge(models.Model):
     item = models.ForeignKey(ListItem, related_name="pledges")
     amount = models.IntegerField()
     charge_id = models.CharField(max_length=60)
+    refunded = models.BooleanField(default=False)
 
 
     @property

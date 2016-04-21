@@ -19,7 +19,8 @@ class ListCreateListItem(generics.ListCreateAPIView):
     serializer_class = ListItemSerializer
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        list_id = self.request.data['list']
+        serializer.save(list=List.objects.get(pk=list_id))
 
 
 class DetailUpdateDeleteList(generics.RetrieveUpdateDestroyAPIView):

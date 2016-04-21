@@ -5,6 +5,7 @@ from lists.models import List, ListItem
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APITestCase
+from userprofiles.models import Pledge
 
 
 class TestListCreateList(APITestCase):
@@ -55,3 +56,14 @@ class TestListItemCreateList(APITestCase):
         self.assertEqual(ListItem.objects.count(), 2)
         self.assertEqual(data['name'], "apitest")
 
+    def test_create_charge_and_pledge(self):
+        token = Token.objects.get(user_id=self.user.id)
+        self.client.credentials(HTTP_AUTHORIZATION="Token " + token.key)
+        url = reverse('create_charge')
+        # stripe.com/docs for a new test token
+        data = {"token": "tok_181rMhLYIYZQuL5sDXujfrhQ", "item_id":"1",
+                "amount": 10}
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Pledge.objects.count(), 1)
+        self.assertEqual(data['amount'], 10)
